@@ -20,15 +20,12 @@ function Workspace() {
     const onClickHandler = () => {
       const data = new FormData() 
       data.append('file', selectedFile)
-      axios.post("http://localhost:8000/upload", data, { 
-      // receive two    parameter endpoint url ,form data
-      })
-      .then(res => { // then print response status
+      axios.post("http://localhost:5500/upload", data, { })
+      .then(res => {
       console.log(res.statusText)
     })
     }
   
-
   return (
     <div className='workspace'>
         <button className='previous-btn'>[</button>
