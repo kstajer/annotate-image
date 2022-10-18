@@ -1,45 +1,40 @@
 import React from 'react'
 import { useCallback, useState, useEffect } from 'react';
-import Dropzone from 'react-dropzone';
+// import Dropzone from 'react-dropzone';
+import axios from 'axios'
 
 function Workspace() {
 
-    // useEffect(()=> {
-    //   console.log(files)
-    // }, [files])
+    const [selectedFile, setSelectedFile]= useState(null)
+    const [loaded, setLoaded]= useState(0)
 
-    const handleOnDrop= (files, rejectedFiles) => {
-      console.log(files)
-      console.log('test')
-      console.log(rejectedFiles)
+    useEffect(()=> {
+      console.log(selectedFile)
+    }, [selectedFile])
 
-      if (files && files.length > 0){
-        const currentFile= files[0]
-        const currentFileType= currentFile.type
-
-        if(currentFileType == "image/png" || currentFileType == "image/jpg" || currentFileType == "image/jpeg" ){
-           alert('good file')
-        }
-        else{
-          alert('wrong file')
-        }
-      }
+    const onChangeHandler=event=>{
+      setSelectedFile(event.target.files[0])
+      setLoaded(0)
     }
+
+    const onClickHandler = () => {
+      const data = new FormData() 
+      data.append('file', selectedFile)
+      axios.post("http://localhost:8000/upload", data, { 
+      // receive two    parameter endpoint url ,form data
+      })
+      .then(res => { // then print response status
+      console.log(res.statusText)
+    })
+    }
+  
 
   return (
     <div className='workspace'>
         <button className='previous-btn'>[</button>
           <div>
-            <Dropzone onDrop={handleOnDrop} accept='image/*' multiple={true}>
-              {({getRootProps, getInputProps}) => (
-              <section>
-                <div {...getRootProps()}>
-                  <input {...getInputProps()} />
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                </div>
-              </section>
-              )}
-            </Dropzone>
+          <input type="file" name="file" onChange={onChangeHandler}/>
+          <button type="button" class="btn btn-success btn-block" onClick={onClickHandler}>Upload</button> 
           </div>
 
         <button className='next-btn'>]</button>
